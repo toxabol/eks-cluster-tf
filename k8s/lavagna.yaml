@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: List
+# appSettings:
+# - appName: &appName db
+# - portName: &portName db-port
+# - appImage: &appImage postgres:10-alpine
+# - appNamespace: &appNamespace app
+# - appSecret: &appSecret api-shared-sec
+# - appLabels: &appLabels test-label
+# - appSelector: &appLabels db
+
+
+items:
+# - apiVersion: v1
+#   kind: Namespace
+#   metadata:
+#     name: *appNamespace
+#     labels: 
+#       name: *appLabels
+    
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: lavagna
+    namespace: app1
+    labels: 
+      name: lavagna
+  spec:
+    ports:
+      - name: app-port
+        #nodePort: 30007
+        port: 8080
+        targetPort: 8080
+    selector:
+      name: lavagna
+        #    type: LoadBalancer
+#    type: NodePort
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: lavagna
+    namespace: app1
+    labels: 
+      name: lavagna
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: 
+        name: lavagna
+    strategy:
+      type: RollingUpdate
+    template:
+      metadata:
+        labels: 
+          name: lavagna
+      spec:
+        containers:
+        - image: 458965/lavagna:latest
+          imagePullPolicy: Always
+          name: lavagna
+          # resources:
+          #   requests:
+          #     cpu: 50m
+          #     memory: 124Mi
+          #   limits:
+          #     cpu: 256m
+          #     memory: 512Mi
+          ports:
+            - name: app-ports
+              containerPort: 8080
+          envFrom:
+          - secretRef:
+              name: lavagna-mysql-secrets
+
+
+

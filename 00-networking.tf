@@ -1,43 +1,43 @@
-module "vpc" {
+module "vpc" "dev" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = var.vpc_name
-  cidr = var.vpc_cidr
+  name = var.vpc_dev_name
+  cidr = var.vpc_dev_cidr
 
   azs              = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  public_subnets = slice(local.subnets_cidr_list , 1, 4)
+  public_subnets = slice(local.subnets_cidr_list_dev , 1, 4)
   
-  private_subnets  = slice(local.subnets_cidr_list , 4, 7) 
-  database_subnets = slice(local.subnets_cidr_list , 7, 10) 
-  elasticache_subnets = slice(local.subnets_cidr_list, 10, 13)
-  intra_subnets = slice(local.subnets_cidr_list, 13, 16)
+  private_subnets  = slice(local.subnets_cidr_list_dev , 4, 7) 
+  database_subnets = slice(local.subnets_cidr_list_dev , 7, 10) 
+  elasticache_subnets = slice(local.subnets_cidr_list_dev, 10, 13)
+  intra_subnets = slice(local.subnets_cidr_list_dev, 13, 16)
 
-  enable_ipv6      = var.vpc_enable_ipv6
+  enable_ipv6      = var.vpc_dev_enable_ipv6
 
-  enable_nat_gateway     = var.vpc_enable_nat_gateway     //true
-  single_nat_gateway     = var.vpc_use_single_nat_gateway //true
-  one_nat_gateway_per_az = var.vpc_use_one_nat_gateway_per_az
+  enable_nat_gateway     = var.vpc_dev_enable_nat_gateway     //true
+  single_nat_gateway     = var.vpc_dev_use_single_nat_gateway //true
+  one_nat_gateway_per_az = var.vpc_dev_use_one_nat_gateway_per_az
 
-  create_database_subnet_group = var.vpc_create_database_subnet_group
+  create_database_subnet_group = var.vpc_dev_create_database_subnet_group
   create_elasticache_subnet_group = true
 
-  manage_default_route_table = var.vpc_manage_default_route_table
-  enable_dns_hostnames       = var.vpc_enable_dns_hostnames
-  enable_dns_support         = var.vpc_enable_dns_support
+  manage_default_route_table = var.vpc_dev_manage_default_route_table
+  enable_dns_hostnames       = var.vpc_dev_enable_dns_hostnames
+  enable_dns_support         = var.vpc_dev_enable_dns_support
   enable_dhcp_options = true
 
 
 
-  elasticache_inbound_acl_rules = local.network_acls["elasticache_inbound"]
-  elasticache_outbound_acl_rules = local.network_acls["elasticache_outbound"]
-  database_inbound_acl_rules = local.network_acls["database_inbound"]
-  database_outbound_acl_rules = local.network_acls["database_outbound"]
-  intra_inbound_acl_rules = local.network_acls["infra_inbound"]
-  intra_outbound_acl_rules = local.network_acls["infra_outbound"]
-  private_inbound_acl_rules = local.network_acls["private_inbound"]
-  private_outbound_acl_rules =local.network_acls["private_outbound"]
-  public_inbound_acl_rules = local.network_acls["public_inbound"]
-  public_outbound_acl_rules = local.network_acls["public_outbound"]
+  elasticache_inbound_acl_rules = local.network_acls_dev["elasticache_inbound"]
+  elasticache_outbound_acl_rules = local.network_acls_dev["elasticache_outbound"]
+  database_inbound_acl_rules = local.network_acls_dev["database_inbound"]
+  database_outbound_acl_rules = local.network_acls_dev["database_outbound"]
+  intra_inbound_acl_rules = local.network_acls_dev["infra_inbound"]
+  intra_outbound_acl_rules = local.network_acls_dev["infra_outbound"]
+  private_inbound_acl_rules = local.network_acls_dev["private_inbound"]
+  private_outbound_acl_rules =local.network_acls_dev["private_outbound"]
+  public_inbound_acl_rules = local.network_acls_dev["public_inbound"]
+  public_outbound_acl_rules = local.network_acls_dev["public_outbound"]
 
  
   public_dedicated_network_acl   = true
@@ -49,11 +49,72 @@ module "vpc" {
   enable_flow_log           = true
   flow_log_destination_type = "s3"
   flow_log_destination_arn  = module.s3_bucket_logs_vpc.s3_bucket_arn
-  #public_subnet_tags = var.vpc_public_subnet_tags
+  #public_subnet_tags = var.vpc_dev_public_subnet_tags
 
-  tags = var.vpc_tags
+  tags = var.vpc_dev_tags
 
-  vpc_tags = var.vpc_vpc_tags
+  vpc_tags = var.vpc_dev_vpc_tags
+}
+
+
+
+
+module "vpc" "prod" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = var.vpc_prod_name
+  cidr = var.vpc_prod_cidr
+
+  azs              = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  public_subnets = slice(local.subnets_cidr_list_prod , 1, 4)
+  
+  private_subnets  = slice(local.subnets_cidr_list_prod , 4, 7) 
+  database_subnets = slice(local.subnets_cidr_list_prod , 7, 10) 
+  elasticache_subnets = slice(local.subnets_cidr_list_prod, 10, 13)
+  intra_subnets = slice(local.subnets_cidr_list_prod, 13, 16)
+
+  enable_ipv6      = var.vpc_prod_enable_ipv6
+
+  enable_nat_gateway     = var.vpc_prod_enable_nat_gateway     //true
+  single_nat_gateway     = var.vpc_prod_use_single_nat_gateway //true
+  one_nat_gateway_per_az = var.vpc_prod_use_one_nat_gateway_per_az
+
+  create_database_subnet_group = var.vpc_prod_create_database_subnet_group
+  create_elasticache_subnet_group = true
+
+  manage_default_route_table = var.vpc_prod_manage_default_route_table
+  enable_dns_hostnames       = var.vpc_prod_enable_dns_hostnames
+  enable_dns_support         = var.vpc_prod_enable_dns_support
+  enable_dhcp_options = true
+
+
+
+  elasticache_inbound_acl_rules = local.network_acls_prod["elasticache_inbound"]
+  elasticache_outbound_acl_rules = local.network_acls_prod["elasticache_outbound"]
+  database_inbound_acl_rules = local.network_acls_prod["database_inbound"]
+  database_outbound_acl_rules = local.network_acls_prod["database_outbound"]
+  intra_inbound_acl_rules = local.network_acls_prod["infra_inbound"]
+  intra_outbound_acl_rules = local.network_acls_prod["infra_outbound"]
+  private_inbound_acl_rules = local.network_acls_prod["private_inbound"]
+  private_outbound_acl_rules =local.network_acls_prod["private_outbound"]
+  public_inbound_acl_rules = local.network_acls_prod["public_inbound"]
+  public_outbound_acl_rules = local.network_acls_prod["public_outbound"]
+
+ 
+  public_dedicated_network_acl   = true
+  private_dedicated_network_acl   = true
+  database_dedicated_network_acl = true
+  elasticache_dedicated_network_acl = true
+  intra_dedicated_network_acl = true
+
+  enable_flow_log           = true
+  flow_log_destination_type = "s3"
+  flow_log_destination_arn  = module.s3_bucket_logs_vpc.s3_bucket_arn
+  #public_subnet_tags = var.vpc_prod_public_subnet_tags
+
+  tags = var.vpc_prod_tags
+
+  vpc_tags = var.vpc_prod_vpc_tags
 }
 
 
@@ -212,6 +273,18 @@ module "s3_bucket_logs_vpc" {
 
 
 data "aws_iam_policy_document" "flow_log_s3" {
+  statement {
+    sid = "AWSPutObjects3Logs"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:*"]
+    }
+
+    actions = ["s3:PutObject"]
+
+    resources = ["arn:aws:s3:::${var.s3_logs_bucket_name}/*"]
+  }
   statement {
     sid = "AWSLogDeliveryWrite"
 

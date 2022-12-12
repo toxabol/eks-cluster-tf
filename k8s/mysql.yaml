@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: List
+# appSettings:
+# - appName: &appName mysql
+# - portName: &portName mysql-port
+# - appImage: &appImage postgres:10-alpine
+# - appNamespace: &appNamespace app
+# - appSecret: &appSecret api-shared-sec
+# - appLabels: &appLabels test-label
+# - appSelector: &appLabels db
+#     # << : *appLabels
+#     # tier: db
+
+items:
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: mysql-service
+    namespace: app1
+    labels:
+      app: db
+  spec:
+    ports:
+      - name: mysql-port
+        port: 3306
+        targetPort: 3306
+    selector:
+      app: db
+      tier: mysql
+    clusterIP: None
+#---
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: mysql-pv-claim
+    namespace: app1
+    labels:
+      app: db
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 20Gi
+#---
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: db-mysql
+    namespace: app1
+    labels:
+      app: db
+  spec:
+    selector:
+      matchLabels:
+        app: db
+        tier: mysql
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: db
+          tier: mysql
+      spec:
+        containers:
+        - image: public.ecr.aws/docker/library/mysql:5.6
+          name: mysql
+          envFrom:
+          - secretRef:
+              name: api-shared-sec
+          ports:
+          - containerPort: 3306
+            name: mysql
+          volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql
+        volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+
+
+

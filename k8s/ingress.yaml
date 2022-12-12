@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: app1
+  name: ingress-alb
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/subnets: subnet-0985c30b4b4673c8e, subnet-0caef7c0ff0e359e6, subnet-05aae122def291ceb
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:679954501512:certificate/45cbf8fc-465e-4098-a400-0a5e162d5119
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=600
+    alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=60
+spec:
+  #  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: lavagna
+      port:
+        number: 8080
+    #    serviceName: lavagna
+    #    servicePort: 8080
+  rules:
+  - host: testapp.go2meet.co
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: lavagna
+            port:
+              number: 8080
+  - host: jenkins.go2meet.co
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myjenkins
+            port:
+              number: 8080
+
