@@ -80,7 +80,7 @@ eks_dev_min_size = 1
 eks_dev_default_instance_types = ["t3.medium"]
 
 
-eks_prod_cluster_name = "dev-cluster"
+eks_prod_cluster_name = "prod-cluster"
 eks_prod_cluster_endpoint_private_access = true
 eks_prod_cluster_endpoint_public_access = false
 eks_prod_instance_types = ["t3.medium"]

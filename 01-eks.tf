@@ -85,13 +85,7 @@ module "front_sg_prod" {
 }
 
 
-resource "aws_kms_key" "dev" {
-  description             = ""
-  deletion_window_in_days = 10
-  tags = {
-    Name = var.eks_dev_cluster_name
-  }
-}
+
 
 
 module "eks_dev" {
@@ -106,11 +100,9 @@ module "eks_dev" {
 #  control_plane_subnet_ids = module.vpc_dev.private_subnets
 	control_plane_subnet_ids = module.vpc_dev.intra_subnets
 
-  create_cloudwatch_log_group = true
   enable_irsa = true
 	create_kms_key = true
   cluster_encryption_config = {
-    provider_key_arn = aws_kms_key.dev.arn
     resources = ["secrets"]
   }
   kms_key_deletion_window_in_days = 7
