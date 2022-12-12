@@ -36,7 +36,7 @@ vpc_dev_vpc_tags = {
 
 
 vpc_prod_name = "tf-prod-upsale"
-vpc_prod_cidr = "10.101.0.0/16"
+vpc_prod_cidr = "10.102.0.0/16"
 
 
 vpc_prod_enable_ipv6      = false
