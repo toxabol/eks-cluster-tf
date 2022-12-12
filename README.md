@@ -69,7 +69,22 @@ To deploy infrastucture you need to clone repository to local machne first, have
   - After that, you need manually issue a certificate for a domain you want to use in AWS Certificate Manager. Check this article to get more details https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html
   
 </details>
-  
+
+<details>
+  <summary><h2>k8s initialization</summary>
+
+ - To setup applications in cluster, you should run those commands from directory k8s. They will add namespace, secrets, mysql, test app and ingress controller.
+
+    ```sh
+    ~ kubectl apply -f namespace.yaml
+    ~ kubectl apply -f secrets.yaml
+    ~ kubectl apply -f mysql.yaml
+    ~ kubectl apply -f lavagna.yaml
+    ~ kubectl apply -f ingress.yaml
+    ```
+    
+</details>
+
 
 <details>
   <summary><h2>Jenkins setup</summary>
