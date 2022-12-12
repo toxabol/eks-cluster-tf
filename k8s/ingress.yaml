@@ -8,7 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/subnets: subnet-0985c30b4b4673c8e, subnet-0caef7c0ff0e359e6, subnet-05aae122def291ceb
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:679954501512:certificate/45cbf8fc-465e-4098-a400-0a5e162d5119
+    alb.ingress.kubernetes.io/certificate-arn: #place certificate arn here
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
