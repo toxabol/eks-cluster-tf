@@ -66,17 +66,17 @@ POLICY
 
 
 
-module "aws_ebs_csi_driver_iam" "dev" {
+module "aws_ebs_csi_driver_iam_dev" {
   source                      = "github.com/andreswebs/terraform-aws-eks-ebs-csi-driver//modules/iam"
-  cluster_oidc_provider       = module.eks.dev.cluster_oidc_issuer_url
+  cluster_oidc_provider       = module.eks_dev.cluster_oidc_issuer_url
   k8s_namespace               = "kube-system"
-  iam_role_name               = "ebs-csi-controller-${module.eks.dev.cluster_name}"
+  iam_role_name               = "ebs-csi-controller-${module.eks_dev.cluster_name}"
 }
-module "aws_ebs_csi_driver_iam" "prod" {
+module "aws_ebs_csi_driver_iam_prod" {
   source                      = "github.com/andreswebs/terraform-aws-eks-ebs-csi-driver//modules/iam"
-  cluster_oidc_provider       = module.eks.prod.cluster_oidc_issuer_url
+  cluster_oidc_provider       = module.eks_prod.cluster_oidc_issuer_url
   k8s_namespace               = "kube-system"
-  iam_role_name               = "ebs-csi-controller-${module.eks.prod.cluster_name}"
+  iam_role_name               = "ebs-csi-controller-${module.eks_prod.cluster_name}"
 }
 
 module "iam_assumable_role_custom_trust_policy" {
@@ -145,7 +145,7 @@ resource "aws_iam_policy" "ebs_access" {
 
 resource "aws_iam_policy_attachment" "dev_ebs_access" {
   name       = "AmazonEKS_EBS_CSI_Driver_Policy_tf-atachment"
-  roles      = [aws_iam_role.ebs_trust_role.name]
+  roles      = [aws_iam_role.dev_ebs_trust_role.name]
   policy_arn = aws_iam_policy.ebs_access.arn
 }
 resource "aws_iam_role" "dev_ebs_trust_role" {
@@ -157,12 +157,12 @@ resource "aws_iam_role" "dev_ebs_trust_role" {
       {
         Effect: "Allow",
         Principal: {
-          Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks.dev.oidc_provider}"
+          Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_dev.oidc_provider}"
         },
         Action: "sts:AssumeRoleWithWebIdentity",
         Condition: {
           StringEquals: {
-            "${module.eks.dev.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+            "${module.eks_dev.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
         }
       }
       }
@@ -187,12 +187,12 @@ resource "aws_iam_role" "prod_ebs_trust_role" {
       {
         Effect: "Allow",
         Principal: {
-          Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks.prod.oidc_provider}"
+          Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_prod.oidc_provider}"
         },
         Action: "sts:AssumeRoleWithWebIdentity",
         Condition: {
           StringEquals: {
-            "${module.eks.prod.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+            "${module.eks_prod.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
         }
       }
       }
@@ -201,11 +201,11 @@ resource "aws_iam_role" "prod_ebs_trust_role" {
 }
 
 output "oidc_dev_provider" {
-  value = module.eks.dev.oidc_provider
+  value = module.eks_dev.oidc_provider
   
 }
 output "oidc_prod_provider" {
-  value = module.eks.prod.oidc_provider
+  value = module.eks_prod.oidc_provider
   
 }
 # output "oidc_2_url" {
@@ -278,25 +278,25 @@ data "aws_iam_policy_document" "dev_aws_load_balancer_controller_assume_role_pol
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(module.eks.dev.cluster_oidc_issuer_url, "https://", "")}:sub"
+      variable = "${replace(module.eks_dev.cluster_oidc_issuer_url, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
     }
 
     principals {
-      identifiers = [module.eks.dev.oidc_provider_arn]
+      identifiers = [module.eks_dev.oidc_provider_arn]
       type        = "Federated"
     }
   }
 }
 
-resource "aws_iam_role" "dev_aws_load_balancer_controller" {
-  assume_role_policy = data.aws_iam_policy_document.dev_aws_load_balancer_controller_assume_role_policy.json
-  name               = "aws-load-balancer-controller"
-}
-resource "aws_iam_role" "prod_aws_load_balancer_controller" {
-  assume_role_policy = data.aws_iam_policy_document.prod_aws_load_balancer_controller_assume_role_policy.json
-  name               = "aws-load-balancer-controller"
-}
+# resource "aws_iam_role" "dev_aws_load_balancer_controller" {
+#   assume_role_policy = data.aws_iam_policy_document.dev_aws_load_balancer_controller_assume_role_policy.json
+#   name               = "aws-load-balancer-controller"
+# }
+# resource "aws_iam_role" "prod_aws_load_balancer_controller" {
+#   assume_role_policy = data.aws_iam_policy_document.prod_aws_load_balancer_controller_assume_role_policy.json
+#   name               = "aws-load-balancer-controller"
+# }
 
 data "aws_iam_policy_document" "prod_aws_load_balancer_controller_assume_role_policy" {
   statement {
@@ -305,12 +305,12 @@ data "aws_iam_policy_document" "prod_aws_load_balancer_controller_assume_role_po
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(module.eks.prod.cluster_oidc_issuer_url, "https://", "")}:sub"
+      variable = "${replace(module.eks_prod.cluster_oidc_issuer_url, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
     }
 
     principals {
-      identifiers = [module.eks.prod.oidc_provider_arn]
+      identifiers = [module.eks_prod.oidc_provider_arn]
       type        = "Federated"
     }
   }
@@ -367,39 +367,39 @@ resource "aws_iam_policy" "additional" {
   })
 }
 
-module "ebs_csi_irsa_role" "dev" {
+module "ebs_csi_irsa_role_dev" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name             = join("-", [module.eks.dev.cluster_name, "eks-ebs_csi_irsa_role"])
+  role_name             = join("-", [module.eks_dev.cluster_name, "eks-ebs_csi_irsa_role"])
   attach_ebs_csi_policy = true
 
   oidc_providers = {
     ex = {
-      provider_arn               = module.eks.dev.oidc_provider_arn
+      provider_arn               = module.eks_dev.oidc_provider_arn
       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
 
   tags = {
-        Name = join("-", [module.eks.dev.cluster_name, "eks-ebs_csi_irsa_role"])
+        Name = join("-", [module.eks_dev.cluster_name, "eks-ebs_csi_irsa_role"])
       }
 }
 
-module "load_balancer_controller_irsa_role" "dev" {
+module "load_balancer_controller_irsa_role_dev" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name = join("-", [module.eks.dev.cluster_name, "eks-load_balancer_controller_irsa_role"])
+  role_name = join("-", [module.eks_dev.cluster_name, "eks-load_balancer_controller_irsa_role"])
   attach_load_balancer_controller_policy = true
 
   oidc_providers = {
     ex = {
-      provider_arn               = module.eks.dev.oidc_provider_arn
+      provider_arn               = module.eks_dev.oidc_provider_arn
       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
     }
   }
 
   tags = {
-        Name = join("-", [module.eks.dev.cluster_name, "eks-load_balancer_controller_irsa_role"])
+        Name = join("-", [module.eks_dev.cluster_name, "eks-load_balancer_controller_irsa_role"])
       }
 }
 
@@ -409,38 +409,38 @@ module "load_balancer_controller_irsa_role" "dev" {
 
 
 
-module "ebs_csi_irsa_role" "prod" {
+module "ebs_csi_irsa_role_prod" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name             = join("-", [module.eks.prod.cluster_name, "eks-ebs_csi_irsa_role"])
+  role_name             = join("-", [module.eks_prod.cluster_name, "eks-ebs_csi_irsa_role"])
   attach_ebs_csi_policy = true
 
   oidc_providers = {
     ex = {
-      provider_arn               = module.eks.prod.oidc_provider_arn
+      provider_arn               = module.eks_prod.oidc_provider_arn
       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
 
   tags = {
-        Name = join("-", [module.eks.prod.cluster_name, "eks-ebs_csi_irsa_role"])
+        Name = join("-", [module.eks_prod.cluster_name, "eks-ebs_csi_irsa_role"])
       }
 }
 
-module "load_balancer_controller_irsa_role" "prod" {
+module "load_balancer_controller_irsa_role_prod" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
-  role_name                              = join("-", [module.eks.prod.cluster_name, "eks-load_balancer_controller_irsa_role"])
+  role_name                              = join("-", [module.eks_prod.cluster_name, "eks-load_balancer_controller_irsa_role"])
   attach_load_balancer_controller_policy = true
 
   oidc_providers = {
     ex = {
-      provider_arn               = module.eks.prod.oidc_provider_arn
+      provider_arn               = module.eks_prod.oidc_provider_arn
       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
     }
   }
 
   tags = {
-        Name = join("-", [module.eks.prod.cluster_name, "eks-load_balancer_controller_irsa_role"])
+        Name = join("-", [module.eks_prod.cluster_name, "eks-load_balancer_controller_irsa_role"])
       }
 }

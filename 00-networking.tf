@@ -1,4 +1,4 @@
-module "vpc" "dev" {
+module "vpc_dev" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = var.vpc_dev_name
@@ -59,7 +59,7 @@ module "vpc" "dev" {
 
 
 
-module "vpc" "prod" {
+module "vpc_prod" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = var.vpc_prod_name

@@ -24,7 +24,7 @@ variable "vpc_dev_name" {
   type        = string
   description = "The name of the VPC specified as argument to this module"
 }
-variable "vpc_cidr" {
+variable "vpc_dev_cidr" {
   type        = string
   description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
 }

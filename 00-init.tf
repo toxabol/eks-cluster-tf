@@ -26,7 +26,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        },
       {
         rule_number = 200
@@ -68,7 +68,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 200
@@ -108,7 +108,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       }
     ]
     private_inbound = [{
@@ -117,7 +117,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        },
       {
         rule_number = 200
@@ -125,7 +125,7 @@ locals {
         from_port   = "22"
         to_port     = "22"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 300
@@ -133,7 +133,7 @@ locals {
         from_port   = "80"
         to_port     = "80"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 400
@@ -141,7 +141,7 @@ locals {
         from_port   = "443"
         to_port     = "443"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -149,7 +149,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
     private_outbound = [
@@ -159,7 +159,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 200
@@ -167,7 +167,7 @@ locals {
         from_port   = "1024"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 300
@@ -175,7 +175,7 @@ locals {
         from_port   = 80
         to_port     = 80
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 400
@@ -183,7 +183,7 @@ locals {
         from_port   = 443
         to_port     = 443
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 500
@@ -191,7 +191,7 @@ locals {
         from_port   = 22
         to_port     = 22
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -199,7 +199,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       }
     ]
     database_inbound = [
@@ -209,7 +209,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -217,7 +217,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -225,7 +225,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -233,7 +233,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
     database_outbound = [
@@ -243,7 +243,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -251,7 +251,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -259,7 +259,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -267,7 +267,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
     elasticache_inbound = [
@@ -277,7 +277,7 @@ locals {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -285,7 +285,7 @@ locals {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -293,7 +293,7 @@ locals {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 020
@@ -301,7 +301,7 @@ locals {
         from_port   = "11211"
         to_port     = "11211"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 201
@@ -309,7 +309,7 @@ locals {
         from_port   = "11211"
         to_port     = "11211"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 202
@@ -317,7 +317,7 @@ locals {
         from_port   = "11211"
         to_port     = "11211"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -325,7 +325,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
     elasticache_outbound = [
@@ -335,7 +335,7 @@ locals {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -343,7 +343,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -351,7 +351,7 @@ locals {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.dev.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_dev.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -359,7 +359,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
     infra_inbound = [
@@ -369,7 +369,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -377,7 +377,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
     infra_outbound = [
@@ -387,7 +387,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -395,7 +395,7 @@ locals {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.dev.vpc_cidr_block
+        cidr_block  = module.vpc_dev.vpc_cidr_block
        }
     ]
   }
@@ -429,7 +429,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        },
       {
         rule_number = 200
@@ -471,7 +471,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 200
@@ -511,7 +511,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       }
     ]
     private_inbound = [{
@@ -520,7 +520,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        },
       {
         rule_number = 200
@@ -528,7 +528,7 @@ network_acls_prod = {
         from_port   = "22"
         to_port     = "22"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 300
@@ -536,7 +536,7 @@ network_acls_prod = {
         from_port   = "80"
         to_port     = "80"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 400
@@ -544,7 +544,7 @@ network_acls_prod = {
         from_port   = "443"
         to_port     = "443"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -552,7 +552,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
     private_outbound = [
@@ -562,7 +562,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 200
@@ -570,7 +570,7 @@ network_acls_prod = {
         from_port   = "1024"
         to_port     = "65535"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 300
@@ -578,7 +578,7 @@ network_acls_prod = {
         from_port   = 80
         to_port     = 80
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 400
@@ -586,7 +586,7 @@ network_acls_prod = {
         from_port   = 443
         to_port     = 443
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 500
@@ -594,7 +594,7 @@ network_acls_prod = {
         from_port   = 22
         to_port     = 22
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -602,7 +602,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       }
     ]
     database_inbound = [
@@ -612,7 +612,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -620,7 +620,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -628,7 +628,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -636,7 +636,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
     database_outbound = [
@@ -646,7 +646,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -654,7 +654,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -662,7 +662,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -670,7 +670,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
     elasticache_inbound = [
@@ -680,7 +680,7 @@ network_acls_prod = {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -688,7 +688,7 @@ network_acls_prod = {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -696,7 +696,7 @@ network_acls_prod = {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 020
@@ -704,7 +704,7 @@ network_acls_prod = {
         from_port   = "11211"
         to_port     = "11211"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 201
@@ -712,7 +712,7 @@ network_acls_prod = {
         from_port   = "11211"
         to_port     = "11211"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 202
@@ -720,7 +720,7 @@ network_acls_prod = {
         from_port   = "11211"
         to_port     = "11211"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -728,7 +728,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
     elasticache_outbound = [
@@ -738,7 +738,7 @@ network_acls_prod = {
         from_port   = "6379"
         to_port     = "6379"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[0]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[0]
        },
       {
         rule_number = 101
@@ -746,7 +746,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[1]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[1]
       },
       {
         rule_number = 102
@@ -754,7 +754,7 @@ network_acls_prod = {
         from_port   = "3306"
         to_port     = "3306"
         protocol    = "tcp"
-        cidr_block  = module.vpc.prod.private_subnets_cidr_blocks[2]
+        cidr_block  = module.vpc_prod.private_subnets_cidr_blocks[2]
       },
       {
         rule_number = 9000
@@ -762,7 +762,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
     infra_inbound = [
@@ -772,7 +772,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -780,7 +780,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
     infra_outbound = [
@@ -790,7 +790,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
       },
       {
         rule_number = 9000
@@ -798,7 +798,7 @@ network_acls_prod = {
         from_port   = "0"
         to_port     = "65535"
         protocol    = "all"
-        cidr_block  = module.vpc.prod.vpc_cidr_block
+        cidr_block  = module.vpc_prod.vpc_cidr_block
        }
     ]
   }

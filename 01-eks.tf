@@ -1,25 +1,31 @@
 data "aws_eks_cluster_auth" "eks_dev" {
-	name = module.eks.dev.cluster_name 
+	name = module.eks_dev.cluster_name 
+  #kubernetes = provider.k8s_dev
+  
+  
 }
 
 
 provider "kubernetes" {
-  host                   = module.eks.dev.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.dev.cluster_certificate_authority_data)
+  host                   = module.eks_dev.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks_dev.cluster_certificate_authority_data)
   token = data.aws_eks_cluster_auth.eks_dev.token
-
+  # alias = "k8s_dev"
 }
 
 data "aws_eks_cluster_auth" "eks_prod" {
-	name = module.eks.prod.cluster_name 
+	name = module.eks_prod.cluster_name 
+  # provider = kubernetes.k8s_prod
+  
+  
 }
 
 
 provider "kubernetes" {
-  host                   = module.eks.dev.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.prod.cluster_certificate_authority_data)
+  host                   = module.eks_dev.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks_prod.cluster_certificate_authority_data)
   token = data.aws_eks_cluster_auth.eks_prod.token
-
+  alias = "k8s_prod"
 }
 
 
@@ -28,7 +34,7 @@ module "front_sg_dev" {
 #   version     = "4.4.0"
   name        = "tf-dev-public-front-sg"
   description = "ingress ssh only from my ip(Tony)"
-  vpc_id      = module.vpc.dev.vpc_id
+  vpc_id      = module.vpc_dev.vpc_id
 
   ingress_with_cidr_blocks = [
     {
@@ -56,7 +62,7 @@ module "front_sg_prod" {
 #   version     = "4.4.0"
   name        = "tf-prod-public-front-sg"
   description = "ingress ssh only from my ip(Tony)"
-  vpc_id      = module.vpc.dev.vpc_id
+  vpc_id      = module.vpc_prod.vpc_id
 
   ingress_with_cidr_blocks = [
     {
@@ -79,24 +85,32 @@ module "front_sg_prod" {
 }
 
 
+resource "aws_kms_key" "dev" {
+  description             = ""
+  deletion_window_in_days = 10
+  tags = {
+    Name = var.eks_dev_cluster_name
+  }
+}
 
 
-
-module "eks" "dev" {
+module "eks_dev" {
   source = "terraform-aws-modules/eks/aws"
-
+  version = "19.0.4"
   cluster_name                    = var.eks_dev_cluster_name
   cluster_endpoint_private_access = var.eks_dev_cluster_endpoint_private_access
 	cluster_endpoint_public_access = var.eks_dev_cluster_endpoint_public_access
 	cluster_version = "1.23"
-  vpc_id = module.vpc.dev.vpc_id
-	subnet_ids = module.vpc.dev.private_subnets
-#  control_plane_subnet_ids = module.vpc.dev.private_subnets
-	control_plane_subnet_ids = module.vpc.dev.intra_subnets
+  vpc_id = module.vpc_dev.vpc_id
+	subnet_ids = module.vpc_dev.private_subnets
+#  control_plane_subnet_ids = module.vpc_dev.private_subnets
+	control_plane_subnet_ids = module.vpc_dev.intra_subnets
 
+  create_cloudwatch_log_group = true
   enable_irsa = true
 	create_kms_key = true
   cluster_encryption_config = {
+    provider_key_arn = aws_kms_key.dev.arn
     resources = ["secrets"]
   }
   kms_key_deletion_window_in_days = 7
@@ -132,11 +146,11 @@ cluster_addons = {
       instance_types = var.eks_dev_instance_types
       capacity_type  = "ON_DEMAND"
       labels = {
-        Environment = "eks-managed-node"
+        Environment = "dev_eks-managed-node"
       }
 
       tags = {
-        Name = "eks-node"
+        Name = "dev-eks-node"
       }
 
 
@@ -152,18 +166,16 @@ cluster_addons = {
 }
 
 
-data "aws_ami" "ami2" {
-  most_recent = true
-  owners      = ["amazon"]
-  # amazon
+# data "aws_ami" "ami2" {
+#   most_recent = true
+#   owners      = ["amazon"]
+#   # amazon
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-}
-
-
+#   filter {
+#     name   = "name"
+#     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+#   }
+# }
 
 
 
@@ -173,17 +185,19 @@ data "aws_ami" "ami2" {
 
 
 
-module "eks" "prod" {
+
+
+module "eks_prod" {
   source = "terraform-aws-modules/eks/aws"
-
+  version = "19.0.3"
   cluster_name                    = var.eks_prod_cluster_name
   cluster_endpoint_private_access = var.eks_prod_cluster_endpoint_private_access
 	cluster_endpoint_public_access = var.eks_prod_cluster_endpoint_public_access
 	cluster_version = "1.23"
-  vpc_id = module.vpc.dev.vpc_id
-	subnet_ids = module.vpc.dev.private_subnets
-#  control_plane_subnet_ids = module.vpc.dev.private_subnets
-	control_plane_subnet_ids = module.vpc.dev.intra_subnets
+  vpc_id = module.vpc_prod.vpc_id
+	subnet_ids = module.vpc_prod.private_subnets
+#  control_plane_subnet_ids = module.vpc_prod.private_subnets
+	control_plane_subnet_ids = module.vpc_prod.intra_subnets
 
   enable_irsa = true
 	create_kms_key = true
@@ -223,11 +237,11 @@ cluster_addons = {
       instance_types = var.eks_prod_instance_types
       capacity_type  = "ON_DEMAND"
       labels = {
-        Environment = "eks-managed-node"
+        Environment = "prod_eks-managed-node"
       }
 
       tags = {
-        Name = "eks-node"
+        Name = "prod-eks-node"
       }
 
 
@@ -258,7 +272,7 @@ data "aws_ami" "ami2" {
 
 
 
-module "key_pair" "dev" {
+module "key_pair_dev" {
   source  = "terraform-aws-modules/key-pair/aws"
 
   key_name           = "tf-dev-created-user-key"
@@ -268,7 +282,7 @@ module "key_pair" "dev" {
         Name = "tf-dev-created-user-key"
       }
 }
-module "key_pair" "prod" {
+module "key_pair_prod" {
   source  = "terraform-aws-modules/key-pair/aws"
 
   key_name           = "tf-prod-created-user-key"
@@ -281,12 +295,12 @@ module "key_pair" "prod" {
 
 resource "aws_instance" "dev" {
 
-  key_name               = module.key_pair.dev.key_pair_name                      
+  key_name               = module.key_pair_dev.key_pair_name                      
   instance_type          = "t3.nano"                   
   ami                    = data.aws_ami.ami2.id
-  vpc_security_group_ids = [module.front_sg_dev.security_group_id,module.eks.dev.node_security_group_id]
+  vpc_security_group_ids = [module.front_sg_dev.security_group_id,module.eks_dev.node_security_group_id]
 
-  subnet_id                   = module.vpc.dev.public_subnets[0]
+  subnet_id                   = module.vpc_dev.public_subnets[0]
   associate_public_ip_address = true                        
   #
   root_block_device {
@@ -314,12 +328,12 @@ resource "aws_instance" "dev" {
 
 resource "aws_instance" "prod" {
 
-  key_name               = module.key_pair.prod.key_pair_name                      
+  key_name               = module.key_pair_prod.key_pair_name                      
   instance_type          = "t3.nano"                   
   ami                    = data.aws_ami.ami2.id
-  vpc_security_group_ids = [module.front_sg_prod.security_group_id,module.eks.prod.node_security_group_id]
+  vpc_security_group_ids = [module.front_sg_prod.security_group_id,module.eks_prod.node_security_group_id]
 
-  subnet_id                   = module.vpc.prod.public_subnets[0]
+  subnet_id                   = module.vpc_prod.public_subnets[0]
   associate_public_ip_address = true                        
   #
   root_block_device {
@@ -344,23 +358,23 @@ resource "aws_instance" "prod" {
 }
 
 output "main_ssh_key_id_dev" {
-  value = module.key_pair.dev.private_key_openssh
+  value = module.key_pair_dev.private_key_openssh
   sensitive = true
 }
 
 resource "local_file" "dev_private_key_openssh" {
-    content  = module.key_pair.dev.private_key_openssh
+    content  = module.key_pair_dev.private_key_openssh
     directory_permission = "0777"
     file_permission = "0600"
     filename = "dev_private_key.pem"
 }
-output "main_ssh_key_id_dev" {
-  value = module.key_pair.prod.private_key_openssh
+output "main_ssh_key_id_prod" {
+  value = module.key_pair_prod.private_key_openssh
   sensitive = true
 }
 
-resource "local_file" "dev_private_key_openssh" {
-    content  = module.key_pair.prod.private_key_openssh
+resource "local_file" "prod_private_key_openssh" {
+    content  = module.key_pair_prod.private_key_openssh
     directory_permission = "0777"
     file_permission = "0600"
     filename = "prod_private_key.pem"
