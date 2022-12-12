@@ -1,6 +1,6 @@
 # eks-test-cluster
 
-To deploy infrastucture you need to clone repository to local machne first, have preinstalled terraform, ssh tool  .
+To deploy infrastucture you need to clone repository to local machne first, have preinstalled terraform, ssh tool ,aws cli .
 
 # Quick start
 
@@ -10,6 +10,8 @@ To deploy infrastucture you need to clone repository to local machne first, have
 - clone *eks-test-cluster* project
 
 - Run *terraform init* in *eks-test-cluster/* root folder to initialize project modules
+    
+- Export AWS credentials(Access_key and Secret_key) via export in terminal
 
 - Open file fixtures.tfvars, change variable *myip* to your ip in CIDR format "X.X.X.X/32"
 
@@ -21,6 +23,8 @@ To deploy infrastucture you need to clone repository to local machne first, have
     ~ git clone git@github.com:toxabol/eks-test-cluster.git
     ~ cd eks-test-cluster
     ~ terraform init
+    ~ export AWS_ACCESS_KEY_ID=some_exiting_access_key
+    ~ export AWS_SECRET_ACCESS_KEY=some_exiting_secret_key
     ~ # manually change variable *myip* to your ip in CIDR format "X.X.X.X/32"
     ~ terraform apply --var-file=fixtures.tfvars --auto-approve
     ```
