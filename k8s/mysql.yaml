@@ -71,7 +71,7 @@ items:
           name: mysql
           envFrom:
           - secretRef:
-              name: api-shared-sec
+              name: lavagna-mysql-secrets
           ports:
           - containerPort: 3306
             name: mysql
