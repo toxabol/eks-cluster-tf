@@ -90,7 +90,7 @@ module "front_sg_prod" {
 
 module "eks_dev" {
   source = "terraform-aws-modules/eks/aws"
-  version = "19.0.4"
+  # version = "19.0.4"
   cluster_name                    = var.eks_dev_cluster_name
   cluster_endpoint_private_access = var.eks_dev_cluster_endpoint_private_access
 	cluster_endpoint_public_access = var.eks_dev_cluster_endpoint_public_access
@@ -130,7 +130,7 @@ cluster_addons = {
 
 	eks_managed_node_groups = {
     # blue = {}
-    eks_managed_nodes = {
+    dev_eks_managed_nodes = {
       min_size     = var.eks_dev_min_size
       max_size     = var.eks_dev_max_size
       desired_size = var.eks_dev_desired_size
@@ -143,6 +143,7 @@ cluster_addons = {
 
       tags = {
         Name = "dev-eks-node"
+        join("/", ["kubernetes.io/cluster", module.eks_dev.cluster_name]) = "owned"
       }
 
 
@@ -181,7 +182,7 @@ cluster_addons = {
 
 module "eks_prod" {
   source = "terraform-aws-modules/eks/aws"
-  version = "19.0.3"
+
   cluster_name                    = var.eks_prod_cluster_name
   cluster_endpoint_private_access = var.eks_prod_cluster_endpoint_private_access
 	cluster_endpoint_public_access = var.eks_prod_cluster_endpoint_public_access
@@ -221,7 +222,7 @@ cluster_addons = {
 
 	eks_managed_node_groups = {
     # blue = {}
-    eks_managed_nodes = {
+    prod_eks_managed_nodes = {
       min_size     = var.eks_prod_min_size
       max_size     = var.eks_prod_max_size
       desired_size = var.eks_prod_desired_size
@@ -234,6 +235,7 @@ cluster_addons = {
 
       tags = {
         Name = "prod-eks-node"
+        join("/", ["kubernetes.io/cluster", module.eks_prod.cluster_name]) = "owned"
       }
 
 

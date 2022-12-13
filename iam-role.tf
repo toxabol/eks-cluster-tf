@@ -133,81 +133,84 @@ resource "aws_iam_policy" "eks_read_only" {
 POLICY
 }
 
-resource "aws_iam_policy" "ebs_access" {
-  name = "AmazonEKS_EBS_CSI_Driver_Policy_tf"
+# resource "aws_iam_policy" "ebs_access" {
+#   name = "AmazonEKS_EBS_CSI_Driver_Policy_tf"
 
-  policy = file("policy_json/example-iam-policy.json") 
+#   policy = file("policy_json/example-iam-policy.json") 
 
-}
-
-
-
-
-resource "aws_iam_policy_attachment" "dev_ebs_access" {
-  name       = "AmazonEKS_EBS_CSI_Driver_Policy_tf-atachment"
-  roles      = [aws_iam_role.dev_ebs_trust_role.name]
-  policy_arn = aws_iam_policy.ebs_access.arn
-}
-resource "aws_iam_role" "dev_ebs_trust_role" {
-  name = "AmazonEKS_EBS_CSI_DriverRole_tf"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect: "Allow",
-        Principal: {
-          Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_dev.oidc_provider}"
-        },
-        Action: "sts:AssumeRoleWithWebIdentity",
-        Condition: {
-          StringEquals: {
-            "${module.eks_dev.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
-        }
-      }
-      }
-    ]
-  })
-}
+# }
 
 
 
 
-resource "aws_iam_policy_attachment" "prod_ebs_access" {
-  name       = "AmazonEKS_EBS_CSI_Driver_Policy_tf-atachment"
-  roles      = [aws_iam_role.prod_ebs_trust_role.name]
-  policy_arn = aws_iam_policy.ebs_access.arn
-}
-resource "aws_iam_role" "prod_ebs_trust_role" {
-  name = "AmazonEKS_EBS_CSI_DriverRole_tf"
+# resource "aws_iam_policy_attachment" "dev_ebs_access" {
+#   name       = "AmazonEKS_EBS_CSI_Driver_Policy_tf-atachment"
+#   roles      = [aws_iam_role.dev_ebs_trust_role.name]
+#   policy_arn = aws_iam_policy.ebs_access.arn
+# }
+# resource "aws_iam_role" "dev_ebs_trust_role" {
+#   name = "AmazonEKS_EBS_CSI_DriverRole_tf"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect: "Allow",
-        Principal: {
-          Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_prod.oidc_provider}"
-        },
-        Action: "sts:AssumeRoleWithWebIdentity",
-        Condition: {
-          StringEquals: {
-            "${module.eks_prod.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
-        }
-      }
-      }
-    ]
-  })
-}
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Effect: "Allow",
+#         Principal: {
+#           Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_dev.oidc_provider}",
+#           Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_prod.oidc_provider}" 
+#         },
+#         Action: "sts:AssumeRoleWithWebIdentity",
+#         Condition: {
+#           StringEquals: {
+#             "${module.eks_dev.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa",
+#             "${module.eks_prod.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa",
+#         }
+#       }
+#       }
+#     ]
+#   })
+# }
 
-output "oidc_dev_provider" {
-  value = module.eks_dev.oidc_provider
+
+
+
+# resource "aws_iam_policy_attachment" "prod_ebs_access" {
+#   name       = "AmazonEKS_EBS_CSI_Driver_Policy_tf-atachment"
+#   roles      = [aws_iam_role.prod_ebs_trust_role.name]
+#   policy_arn = aws_iam_policy.ebs_access.arn
+# }
+# resource "aws_iam_role" "prod_ebs_trust_role" {
+#   name = "AmazonEKS_EBS_CSI_DriverRole_tf"
+
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Effect: "Allow",
+#         Principal: {
+#           Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_prod.oidc_provider}",
+#           Federated: "arn:aws:iam::${data.aws_caller_identity.current.id}:oidc-provider/${module.eks_dev.oidc_provider}"
+#         },
+#         Action: "sts:AssumeRoleWithWebIdentity",
+#         Condition: {
+#           StringEquals: {
+#             "${module.eks_prod.oidc_provider}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+#         }
+#       }
+#       }
+#     ]
+#   })
+# }
+
+# output "oidc_dev_provider" {
+#   value = module.eks_dev.oidc_provider
   
-}
-output "oidc_prod_provider" {
-  value = module.eks_prod.oidc_provider
+# }
+# output "oidc_prod_provider" {
+#   value = module.eks_prod.oidc_provider
   
-}
+# }
 # output "oidc_2_url" {
 #   value = module.eks.cluster_oidc_issuer_url
   
@@ -255,39 +258,48 @@ resource "aws_iam_role" "eks-cluster" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "amazon-eks-cluster-policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks-cluster.name
-}
-
-# data "tls_certificate" "eks" {
-#   url = module.eks.cluster_oidc_issuer_url
-# }
-
-# resource "aws_iam_openid_connect_provider" "eks" {
-#   client_id_list  = ["sts.amazonaws.com"]
-#   thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
-#   url             = module.eks.cluster_oidc_issuer_url
+# resource "aws_iam_role_policy_attachment" "amazon-eks-cluster-policy" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+#   role       = aws_iam_role.eks-cluster.name
 # }
 
 
-data "aws_iam_policy_document" "dev_aws_load_balancer_controller_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-    effect  = "Allow"
+# data "aws_iam_policy_document" "dev_aws_load_balancer_controller_assume_role_policy" {
+#   statement {
+#     actions = ["sts:AssumeRoleWithWebIdentity"]
+#     effect  = "Allow"
 
-    condition {
-      test     = "StringEquals"
-      variable = "${replace(module.eks_dev.cluster_oidc_issuer_url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
-    }
+#     condition {
+#       test     = "StringEquals"
+#       variable = "${replace(module.eks_dev.cluster_oidc_issuer_url, "https://", "")}:sub"
+#       values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
+#     }
 
-    principals {
-      identifiers = [module.eks_dev.oidc_provider_arn]
-      type        = "Federated"
-    }
-  }
-}
+#     principals {
+#       identifiers = [module.eks_dev.oidc_provider_arn]
+#       type        = "Federated"
+#     }
+#   }
+# }
+
+
+# data "aws_iam_policy_document" "prod_aws_load_balancer_controller_assume_role_policy" {
+#   statement {
+#     actions = ["sts:AssumeRoleWithWebIdentity"]
+#     effect  = "Allow"
+
+#     condition {
+#       test     = "StringEquals"
+#       variable = "${replace(module.eks_prod.cluster_oidc_issuer_url, "https://", "")}:sub"
+#       values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
+#     }
+
+#     principals {
+#       identifiers = [module.eks_prod.oidc_provider_arn]
+#       type        = "Federated"
+#     }
+#   }
+# }
 
 # resource "aws_iam_role" "dev_aws_load_balancer_controller" {
 #   assume_role_policy = data.aws_iam_policy_document.dev_aws_load_balancer_controller_assume_role_policy.json
@@ -298,56 +310,29 @@ data "aws_iam_policy_document" "dev_aws_load_balancer_controller_assume_role_pol
 #   name               = "aws-load-balancer-controller"
 # }
 
-data "aws_iam_policy_document" "prod_aws_load_balancer_controller_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-    effect  = "Allow"
 
-    condition {
-      test     = "StringEquals"
-      variable = "${replace(module.eks_prod.cluster_oidc_issuer_url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
-    }
+# resource "aws_iam_policy" "aws_load_balancer_controller" {
+#   policy = file("policy_json/AWSLoadBalancerController.json")
+#   name   = "AWSLoadBalancerController"
+# }
 
-    principals {
-      identifiers = [module.eks_prod.oidc_provider_arn]
-      type        = "Federated"
-    }
-  }
-}
+# resource "aws_iam_role_policy_attachment" "dev_aws_load_balancer_controller_attach" {
+#   role       = aws_iam_role.dev_aws_load_balancer_controller.name
+#   policy_arn = aws_iam_policy.aws_load_balancer_controller.arn
+# }
 
-resource "aws_iam_role" "dev_aws_load_balancer_controller" {
-  assume_role_policy = data.aws_iam_policy_document.dev_aws_load_balancer_controller_assume_role_policy.json
-  name               = "aws-load-balancer-controller"
-}
-resource "aws_iam_role" "prod_aws_load_balancer_controller" {
-  assume_role_policy = data.aws_iam_policy_document.prod_aws_load_balancer_controller_assume_role_policy.json
-  name               = "aws-load-balancer-controller"
-}
+# output "dev_aws_load_balancer_controller_role_arn" {
+#   value = aws_iam_role.dev_aws_load_balancer_controller.arn
+# }
 
+# resource "aws_iam_role_policy_attachment" "prod_aws_load_balancer_controller_attach" {
+#   role       = aws_iam_role.prod_aws_load_balancer_controller.name
+#   policy_arn = aws_iam_policy.aws_load_balancer_controller.arn
+# }
 
-resource "aws_iam_policy" "aws_load_balancer_controller" {
-  policy = file("policy_json/AWSLoadBalancerController.json")
-  name   = "AWSLoadBalancerController"
-}
-
-resource "aws_iam_role_policy_attachment" "dev_aws_load_balancer_controller_attach" {
-  role       = aws_iam_role.dev_aws_load_balancer_controller.name
-  policy_arn = aws_iam_policy.aws_load_balancer_controller.arn
-}
-
-output "dev_aws_load_balancer_controller_role_arn" {
-  value = aws_iam_role.dev_aws_load_balancer_controller.arn
-}
-
-resource "aws_iam_role_policy_attachment" "prod_aws_load_balancer_controller_attach" {
-  role       = aws_iam_role.prod_aws_load_balancer_controller.name
-  policy_arn = aws_iam_policy.aws_load_balancer_controller.arn
-}
-
-output "prod_aws_load_balancer_controller_role_arn" {
-  value = aws_iam_role.prod_aws_load_balancer_controller.arn
-}
+# output "prod_aws_load_balancer_controller_role_arn" {
+#   value = aws_iam_role.prod_aws_load_balancer_controller.arn
+# }
 
 
 resource "aws_iam_policy" "additional" {
