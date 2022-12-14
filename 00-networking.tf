@@ -101,11 +101,11 @@ module "vpc_prod" {
   public_outbound_acl_rules = local.network_acls_prod["public_outbound"]
 
  
-  public_dedicated_network_acl   = true
-  private_dedicated_network_acl   = true
-  database_dedicated_network_acl = true
-  elasticache_dedicated_network_acl = true
-  intra_dedicated_network_acl = true
+  # public_dedicated_network_acl   = true
+  # private_dedicated_network_acl   = true
+  # database_dedicated_network_acl = true
+  # elasticache_dedicated_network_acl = true
+  # intra_dedicated_network_acl = true
 
   enable_flow_log           = true
   flow_log_destination_type = "s3"
