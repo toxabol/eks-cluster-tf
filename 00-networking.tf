@@ -40,8 +40,8 @@ module "vpc_dev" {
   public_outbound_acl_rules = local.network_acls_dev["public_outbound"]
 
  
-  public_dedicated_network_acl   = true
-  private_dedicated_network_acl   = true
+  # public_dedicated_network_acl   = true
+  # private_dedicated_network_acl   = true
   database_dedicated_network_acl = true
   elasticache_dedicated_network_acl = true
   intra_dedicated_network_acl = true
